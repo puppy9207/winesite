@@ -6,8 +6,32 @@
 </head>
 <body>
 index
-{% for i in cust %}
-{{ i }}
-{% endfor %}
+<hr>
+{% if session['logFlag'] == False %}
+<form action="/user/login" method="post">
+    <input type="text" placeholder="아이디" name="id">
+    <input type="password" placeholder="비밀번호" name="pw">
+    <input type="submit" value="로그인">
+</form>
+{% else %}
+    {{ session['userId'] }} 님 환영합니다.
+    <a href="/user/logout">로그아웃</a>
+{% endif %}
+<hr>
+<table>
+    <tr>
+        <th>아이디</th>
+        <th></th>
+    </tr>
+    {% for i in cust %}
+    <tr>
+        <td><a href="/user/detail/{{i[0]}}">{{ i[0] }}</a></td>
+        <td><a href="/user/update/{{i[0]}}">|수정|</a><a href="/user/delete/{{i[0]}}">|삭제|</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="/user/create">회원가입</a>
 </body>
 </html>

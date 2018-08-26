@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/user/edit" method="post">
+    <table>
+        <tr>
+            <td>아이디</td>
+            <td><input type="text" value="{{cust[0]}}" readonly name="id"></td>
+        </tr>
+        <tr>
+            <td>성별</td>
+            <td><input type="text" value="{{cust[2]}}" readonly></td>
+        </tr>
+        <tr>
+            <td>나이</td>
+            <td><input type="number" value="{{cust[3]}}" name="age"></td>
+        </tr>
+        <tr>
+            <td>이메일</td>
+            <td><input type="text" value="{{cust[4]}}" name="email"></td>
+        </tr>
+        <tr>
+            <td>주소</td>
+            <td><input type="text" value="{{cust[5]}}" name="address"></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="수정"></td>
+        </tr>
+    </table>
+    <input type="hidden">
+</form>
+</body>
+</html>

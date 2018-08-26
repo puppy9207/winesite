@@ -8,17 +8,38 @@
 create
 <hr>
 <form action="/user/new" method="post">
-    <input type="text" name="userid" placeholder="아이디"> <br>
-    <input type="password" name="password" placeholder="비밀번호"><br>
-    <select name="gender">
-        <option value="남">남</option>
-        <option value="여">여</option>
-    </select><br>
-    <input type="number" name="age"><br>
-    <input type="text" name="email"><br>
-    <input type="text" name="address"><br>
-    <input type="submit" value="입력">
 
+    <table>
+        <tr>
+            <td>아이디</td>
+            <td><input type="text" name="userid" placeholder="아이디" required></td></tr>
+        <tr>
+            <td>비밀번호</td>
+            <td><input type="password" name="password" placeholder="비밀번호" id="password" required></td></tr>
+        <tr>
+            <td>비밀번호확인</td>
+            <td><input type="password" name="pwCheck" placeholder="비밀번호" id="pwCheck" required></td></tr>
+        <tr>
+            <td>성별</td>
+            <td>
+            <select name="gender" required>
+                <option value="남">남</option>
+                <option value="여">여</option>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <td>나이</td>
+            <td><input type="number" name="age" required></td></tr>
+        <tr>
+            <td>이메일</td>
+            <td><input type="text" name="email" required></td></tr>
+        <tr>
+            <td>주소</td>
+            <td><input type="text" name="address" required></td></tr>
+        <tr><td><input type="submit" value="입력"></td></tr>
+    </table>
+    <script type="text/javascript" src="{{url_for('static',filename='js/user.js') }}"></script>
 </form>
 </body>
 </html>

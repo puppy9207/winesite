@@ -1,37 +1,43 @@
 import sqlite3
-import os
+from os import urandom
 from flask import Flask, render_template,redirect,request,session
 from flask_bcrypt import Bcrypt
 
-secret_key = os.urandom(16)
+secret_key = urandom(16)
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key = secret_key
 
 # 테이블 생성
 def createTable():
-    conn = sqlite3.connect('wine.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-    CREATE TABLE if not exists customer (
-        c_id      VARCHAR(30)  NOT NULL primary key,
-        c_pw      VARCHAR(40)  NOT NULL, 
-        c_gender  CHAR(8)      NOT NULL, 
-        c_age     INT          NOT NULL, 
-        c_email   VARCHAR(60)  NOT NULL unique, 
-        c_address VARCHAR(200) NOT NULL 
-    )
-    ''')
-    conn.close()
+    try:
+        conn = sqlite3.connect('wine.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+        CREATE TABLE if not exists customer (
+            c_id      VARCHAR(30)  NOT NULL primary key,
+            c_pw      VARCHAR(40)  NOT NULL, 
+            c_gender  CHAR(8)      NOT NULL, 
+            c_age     INT          NOT NULL, 
+            c_email   VARCHAR(60)  NOT NULL unique, 
+            c_address VARCHAR(200) NOT NULL 
+        )
+        ''')
+    finally:
+        conn.close()
 createTable()
 
 def searchUser(userId):
-    conn = sqlite3.connect('wine.db')
-    cursor = conn.cursor()
-    cursor.execute('select * from customer where c_id= ?', [userId])
-    cust = cursor.fetchall()
-    cust = cust[0]
-    conn.close()
+    try:
+        conn = sqlite3.connect('wine.db')
+        cursor = conn.cursor()
+        cursor.execute('select * from customer where c_id= ?', [userId])
+        cust = cursor.fetchall()
+        cust = cust[0]
+    except Exception as e:
+        return False
+    finally:
+        conn.close()
     return cust
 
 #메인페이지(임시)
@@ -67,7 +73,11 @@ def userDBinsert():
 @app.route('/user/update/<userId>')
 def userUpdate(userId):
     cust = searchUser(userId)
-    return render_template('/user/update.html',cust=cust)
+    if cust != False:
+        return render_template('/user/update.html',cust=cust)
+    elif cust == False:
+        #여기에 alert창을 띄우는거 넣어야함
+        return redirect('/')
 
 #유저 정보 수정 디비 반영
 @app.route('/user/edit',methods=['POST'])
@@ -123,7 +133,7 @@ def login():
             session['userId'] = userId
             return redirect('/')
         else:
-            return '로그인 실패'
+            return '로그인 실패 <a href="/">돌아가기</a>'
     except Exception as e:
         return '로그인 실패 <a href="/">돌아가기</a>'
 
@@ -132,6 +142,16 @@ def logout():
     session['logFlag'] = False
     session.pop('userId', None)
     return redirect('/')
+
+@app.route('/wine/find',methods=['POST'])
+def wineFind():
+    conn = sqlite3.connect('wine.db')
+    cursor = conn.cursor()
+    query = request.form['query']
+    cursor.execute('select * from wine where w_ko like ? or w_en like ?',['%'+query+'%','%'+query+'%'])
+    wine = cursor.fetchall()
+    conn.close()
+    return render_template('/wine/find.html',wine=wine)
 
 if __name__ == '__main__':
     app.run()

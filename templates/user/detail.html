@@ -6,9 +6,20 @@
 </head>
 <body>
 <table>
-{% for i in cust %}
-    
-{% endfor %}
+    <tr>
+        <th>아이디</th>
+        <th>성별</th>
+        <th>나이</th>
+        <th>이메일</th>
+        <th>주소</th>
+    </tr>
+    <tr>
+        <td>{{cust[0]}}</td>
+        <td>{{cust[2]}}</td>
+        <td>{{cust[3]}}</td>
+        <td>{{cust[4]}}</td>
+        <td>{{cust[5]}}</td>
+    </tr>
 </table>
 </body>
 </html>

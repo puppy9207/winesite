@@ -56,11 +56,12 @@ with open('./wine.csv','r',encoding='utf-8-sig') as f:
 
 conn = sqlite3.connect('wine.db')
 cursor = conn.cursor()
-cursor.execute('select count(*) from wine where not w_sugar="None" and not w_acid="None" and not w_body="None" and not w_tarnin="None" and not w_price="None"')
+# where not w_sugar="None" and not w_acid="None" and not w_body="None" and not w_tarnin="None" and not w_price="None"
+cursor.execute('select * from wine')
 wine = cursor.fetchall()
 
-# with open('output.csv','w',encoding='utf-8',newline='') as f:
-#     wr = csv.writer(f)
-#     for i in wine:
-#         wr.writerow(i)
-#         print(i)
+with open('output.csv','w',encoding='utf-8',newline='') as f:
+    wr = csv.writer(f)
+    for i in wine:
+        wr.writerow(i)
+        print(i)

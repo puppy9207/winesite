@@ -1,25 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<table>
-    <tr>
-        <th>아이디</th>
-        <th>성별</th>
-        <th>나이</th>
-        <th>이메일</th>
-        <th>주소</th>
-    </tr>
-    <tr>
-        <td>{{cust[0]}}</td>
-        <td>{{cust[2]}}</td>
-        <td>{{cust[3]}}</td>
-        <td>{{cust[4]}}</td>
-        <td>{{cust[5]}}</td>
-    </tr>
-</table>
-</body>
-</html>
+{% include "header.html" %}
+<div class="container m-sm-0">
+    <div class="col-md-4">
+        <div class="row border-bottom mb-3 border-danger">
+            <h2 class="text-danger mx-auto">My Page</h2>
+        </div>
+        <div class="row">
+            <table class="table table-bordered">
+                <tr>
+                    <th scope="col" class="bg-light">아이디</th>
+                    <td scope="col" class="bg-light">{{cust[0]}}</td>
+                </tr>
+                <tr>
+                    <th scope="col">이름</th>
+                    <td scope="col">{{cust[1]}}</td>
+                </tr>
+                <tr>
+                    <th scope="col" class="bg-light">성별</th>
+                    <td scope="col" class="bg-light">{{cust[3]}}</td>
+                </tr>
+                <tr>
+                    <th scope="col">나이</th>
+                    <td scope="col">{{cust[4]}}</td>
+                </tr>
+                <tr>
+                    <th scope="col" class="bg-light">이메일</th>
+                    <td scope="col" class="bg-light">{{cust[5]}}</td>
+                </tr>
+                <tr>
+                    <th scope="col">주소</th>
+                    <td scope="col">{{cust[6]}}</td>
+                </tr>
+                <tr>
+                    <td class ="mx-auto"colspan="2"><a class="btn btn-primary btn-outline-light" href="">수정</a></td>
+                </tr>
+             </table>
+        </div>
+    </div>
+
+    <div class="col-md-8"></div>
+</div>
+{% include "footer.html" %}

@@ -1,0 +1,40 @@
+{% include 'header.html' %}
+    <section class="showcase">
+      <div class="container-fluid p-0">
+        <div class="row no-gutters">
+          <div class="col-lg-4 order-lg-2 text-white showcase-img">
+              <img src="{{url_for('static',filename='img/winegraph.png') }}" alt="">
+          </div>
+          <div class="col-lg-8 order-lg-1 my-auto showcase-text">
+            <h2 style="color: #3A01DF;font-weight:bold; text-align:center; font-family:'Verdana'; padding-bottom:10pt">Analysis Of Wine For You</h2> <br>
+              <p class="mb-0"><strong>Fine Wining</strong>에는 약 16,000여가지의 와인이 준비되어있습니다. </p>
+              <p class="mb-0"> 이를 바탕으로 당도(단맛), 산도(신맛), 알코올 도수, 이산화황(산화조절) 등, 고객의 선호도에 따른 분석 및 추천하는 시스템을 가지고 있습니다.</p>
+              <p class="mb-0">전문 연구소 및 와인 경제 연구소와의 협약을 통해, 더 나은 품질의 와인을 제공해드리는 Fine Wining이 되겠습니다. </p>
+          </div>
+        </div>
+          <hr>
+        <div class="row no-gutters">
+          <div class="col-lg-4 text-white showcase-img">
+            <img src="{{url_for('static',filename='img/redwine.jpg') }}" alt="">
+         </div>
+          <div class="col-lg-8 my-auto showcase-text">
+            <h2 style="color:#b42233;font-weight:bold; text-align:center; font-family:'Verdana'; padding-bottom:10pt">Red Wine for You</h2>
+              <p class="mb-0"><strong>레드와인</strong>에 어울리는 안주는 육류입니다. </p>
+              <p class="mb-0">타닌 성분이 들어있어 육류의 지방질을 중화시켜주며 피자, 파스타 등의 이탈리아 요리, 소고기 스테이크와 돼지고기, 닭고기와도 함께 즐기기 좋습니다.</p>
+              <p class="mb-0">대표적인 레드와인의 품종으로는 카베르네 소비뇽(Cabernet Sauvignon), 메를로(Merlot), 피노 누와(Pinot Noir), 시라(Syrah), 쉬라즈(Shiraz), 카베르네 프랑(Cabernet franc), 프티 베르도(Petit Verdot), 진판델(Zinfandel), 가메(Gamay), 말벡(Malbec), 네비올로(Nebbiolo), 그르나슈(Grenache), 산지오베제(Sangiovese) 등이 있습니다.</p>
+          </div>
+        </div>
+          <hr>
+        <div class="row no-gutters">
+          <div class="col-lg-4 order-lg-2 text-white showcase-img">
+              <img src="{{url_for('static',filename='img/whitewine.jpg') }}" alt="">
+          </div>
+          <div class="col-lg-8 order-lg-1 my-auto showcase-text">
+            <h2 style="color:#D7DF01;font-weight:bold; text-align:center; font-family:'Verdana'; padding-bottom:10pt" >White Wine for You</h2>
+              <p class="mb-0">일반적으로 생선요리나 채소류, 향이 강하지 않은 담백한 요리, 향이 부드러운 치즈와 잘 어울리며 색이 희고 맛과 향이 강하지 않기 때문에 생선요리를 할 때 잡 내를 없애기 위해 <strong>화이트 와인</strong>을 주로 이용합니다. </p>
+              <p class="mb-0">대표적인 화이트와인의 품종으로는 샤르도네(Chardonnay), 쇼비뇽 블랑(Sauvignon Blanc), 리슬링(Riesling), 세미용(Semillon), 피노 그리지오(Pinot Grigio), 게부르츠트라미너(Gewurztraminer), 슈냉 블랑(Chenin Blanc), 무스카트(Muscat), 무스카데(Muscadet), 피노블랑(Pinot Blanc), 뮐러 트루가우(Muller-thurgau) 등이 있습니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+{% include "footer.html" %}

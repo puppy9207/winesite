@@ -16,6 +16,7 @@ def createTable():
         cursor.execute('''
         CREATE TABLE if not exists customer (
             c_id      VARCHAR(30)  NOT NULL primary key,
+            c_name    VARCHAR(30)  NOT NULL,
             c_pw      VARCHAR(40)  NOT NULL, 
             c_gender  CHAR(8)      NOT NULL, 
             c_age     INT          NOT NULL, 
@@ -48,7 +49,7 @@ def index():
     cursor.execute('select * from customer')
     cust = cursor.fetchall()
     conn.close()
-    return render_template('index.html',cust=cust)
+    return render_template('project1.html',cust=cust)
 
 #유저 회원가입 폼
 @app.route('/user/create')
@@ -58,15 +59,18 @@ def userCreate():
 #유저 회원가입 디비 저장
 @app.route('/user/new',methods=['POST'])
 def userDBinsert():
-    conn = sqlite3.connect('wine.db')
-    cursor = conn.cursor()
-    password = bcrypt.generate_password_hash(request.form['password'])
-    data = [request.form['userid'],password,request.form['gender'],
-            request.form['age'],request.form['email'],request.form['address']
-            ]
-    cursor.execute('insert into customer values(?,?,?,?,?,?)',data)
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect('wine.db')
+        cursor = conn.cursor()
+        password = bcrypt.generate_password_hash(request.form['password'])
+        data = [request.form['userid'],request.form['name'],password,request.form['gender'],
+                request.form['age'],request.form['email'],request.form['address']
+                ]
+        cursor.execute('insert into customer values(?,?,?,?,?,?,?)',data)
+        conn.commit()
+        conn.close()
+    except Exception:
+        return redirect('오류 <a href="/">돌아가기</a>')
     return redirect('/')
 
 #유저 정보 수정 폼
@@ -102,8 +106,14 @@ def userDBdelete(userId):
 
 @app.route('/user/detail/<userId>')
 def userDetail(userId):
-    cust = searchUser(userId)
-    return render_template('/user/detail.html',cust=cust)
+    try:
+        if session['userId'] == userId:
+            cust = searchUser(userId)
+            return render_template('/user/detail.html',cust=cust)
+        else:
+            return '잘못된 접근입니다. <a href="/">돌아가기</a>'
+    except KeyError:
+        return '잘못된 접근입니다. <a href="/">돌아가기</a>'
 
 def loginDB(id,pw):
     conn = sqlite3.connect('wine.db')
@@ -152,6 +162,12 @@ def wineFind():
     wine = cursor.fetchall()
     conn.close()
     return render_template('/wine/find.html',wine=wine)
+
+@app.route('/wine/aboutWine')
+def aboutWine():
+    return render_template('/wine/aboutWine.html')
+
+# @app.route('/wine/cluster')
 
 if __name__ == '__main__':
     app.run()

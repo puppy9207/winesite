@@ -124,7 +124,6 @@ def userDetailWithRecommend():
             check = True
             if acid == '0' and alcohol == '0' and density=='0' and residual_sugar =='0' and total_sulfur_dioxide=='0':
                 check = False
-            print(check)
             data = np.genfromtxt('centroid.csv', dtype=np.float32, delimiter=',', skip_header=1,
                                  usecols=(5, 6, 7, 8, 9))
 
@@ -139,7 +138,6 @@ def userDetailWithRecommend():
                 cluster_cnt += 1
 
             dis = sorted(dis)
-            print(dis[0][1])
             cluster = dis[0][1]
             if cluster == 1:  # WhiteRose
                 c_data = [3.8169, 2.1505, 3.87, 3.165, 5]
@@ -151,7 +149,7 @@ def userDetailWithRecommend():
                 c_data = [3.65535, 2.7835, 3.47, 1.7845, 3.281204219]
             else:  # BitterBetter
                 c_data = [4.5369, 2.998, 3.845, 1.559, 0.970920012]
-
+            print(c_data)
             # nest for best clustering
             if (sum(user_list) <= 10):  # no specific preference
                 cluster = 4
@@ -168,7 +166,7 @@ def userDetailWithRecommend():
             elif (user_list[4] >= 4):  # preference for white/rose not red
                 cluster = 1
                 c_data = [3.8169, 2.1505, 3.87, 3.165, 5]
-
+            print(cluster)
             labels = ["acid", "alcohol", "density", "residual sugar", "total sulfur dioxide"]
             datasets = [
                 {
@@ -182,7 +180,12 @@ def userDetailWithRecommend():
                     "data": [user_list[0], user_list[1], user_list[2], user_list[3], user_list[4]]
                 }
             ]
-            return render_template('/user/detail.html',check=check,cust=cust,labels=labels, datasets=datasets,userWine=userWine,cluster=cluster_name[cluster])
+            return render_template('/user/detail.html',check=check,
+                                   cust=cust,
+                                   labels=labels,
+                                   datasets=datasets,
+                                   userWine=userWine,
+                                   cluster=cluster_name[cluster-1])
     else:
             return '잘못된 접근입니다. <a href="/">돌아가기</a>'
 
@@ -229,7 +232,13 @@ def wineFind():
     conn = sqlite3.connect('wine.db')
     cursor = conn.cursor()
     query = request.form['query']
-    userId = session['userId']
+    try:
+        if session['logFlag'] ==True:
+            userId = session['userId']
+        else:
+            userId = None
+    except KeyError:
+        userId = None
     cursor.execute('select * from wine where w_ko like ? or w_en like ?',['%'+query+'%','%'+query+'%'])
     wine = cursor.fetchall()
     conn.close()

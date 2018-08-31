@@ -1,42 +1,239 @@
 {% include "header.html" %}
-<div class="container m-sm-0">
-    <div class="col-md-4">
-        <div class="row border-bottom mb-3 border-danger">
-            <h2 class="text-danger mx-auto">My Page</h2>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<div class="container">
+    <div class="row col-12">
+        <div class="col-md-4">
+            <div class="row border-bottom mb-3 border-danger">
+                <h2 class="text-danger mx-auto">My Page</h2>
+            </div>
+            <div class="row">
+                <table class="table table-bordered">
+                    <tr>
+                        <th scope="col" class="bg-light">아이디</th>
+                        <td scope="col" class="bg-light">{{cust[0]}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">이름</th>
+                        <td scope="col">{{cust[1]}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="col" class="bg-light">성별</th>
+                        <td scope="col" class="bg-light">{{cust[3]}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">나이</th>
+                        <td scope="col">{{cust[4]}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="col" class="bg-light">이메일</th>
+                        <td scope="col" class="bg-light">{{cust[5]}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">주소</th>
+                        <td scope="col">{{cust[6]}}</td>
+                    </tr>
+                    <tr>
+                        <td class ="mx-auto text-center" colspan="2">
+                            <a class="btn btn-primary btn-outline-light col-5 text-light" data-toggle="modal" data-target="#recommend">와인 추천받기</a>
+                        </td>
+                    </tr>
+                 </table>
+            </div>
         </div>
-        <div class="row">
-            <table class="table table-bordered">
-                <tr>
-                    <th scope="col" class="bg-light">아이디</th>
-                    <td scope="col" class="bg-light">{{cust[0]}}</td>
-                </tr>
-                <tr>
-                    <th scope="col">이름</th>
-                    <td scope="col">{{cust[1]}}</td>
-                </tr>
-                <tr>
-                    <th scope="col" class="bg-light">성별</th>
-                    <td scope="col" class="bg-light">{{cust[3]}}</td>
-                </tr>
-                <tr>
-                    <th scope="col">나이</th>
-                    <td scope="col">{{cust[4]}}</td>
-                </tr>
-                <tr>
-                    <th scope="col" class="bg-light">이메일</th>
-                    <td scope="col" class="bg-light">{{cust[5]}}</td>
-                </tr>
-                <tr>
-                    <th scope="col">주소</th>
-                    <td scope="col">{{cust[6]}}</td>
-                </tr>
-                <tr>
-                    <td class ="mx-auto"colspan="2"><a class="btn btn-primary btn-outline-light" href="">수정</a></td>
-                </tr>
-             </table>
+
+        <div class="col-md-4">
+            <div class="row border-bottom mb-3 border-danger">
+                <h2 class="text-danger mx-auto">와인 그래프</h2>
+            </div>
+            <img class="img-fluid" src="{{url_for('static',filename='img/box.png') }}" alt="">
+        </div>
+        <div class="col-md-4">
+            {% if check %}
+            <div class="row border-bottom mb-3 border-danger">
+                <h2 class="text-danger mx-auto">내 편향성</h2>
+            </div>
+            <canvas id="marksChart" width="700" height="500"></canvas>
+            <div class="row">
+                <h4 class="text-primary mx-auto">당신은 {{ cluster }} 형</h4>
+            </div>
+            {% endif %}
+        </div>
+<div id="cluster1" style="display: none">{{cluster}}</div>
+    </div>
+    <div class="row col-12">
+        <div class="col-md-4">
+            <div class="row border-bottom mb-3 border-danger">
+                <h2 class="text-danger mx-auto">내 와인</h2>
+            </div>
+            <div class="row">
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>와인한글이름</th>
+                        <th>와인영어이름</th>
+                    </tr>
+                    </thead>
+                    {% for i in userWine %}
+                    <tr>
+                        <td>{{ i[0] }}</td>
+                        <td>{{ i[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                 </table>
+            </div>
+        </div>
+        <div class="col-md-8">
+             {% if check %}
+                <div class="row border-bottom mb-3 border-danger">
+                    <h2 class="text-danger mx-auto">당신을 위한 추천와인</h2>
+                </div>
+                 <div class="row">
+                     <div class="container">
+                         <input type="button" value="<" onclick="showimage(0)" class="btn btn-dark btn-outline-dark col-md-1">
+                         <div class="col-md-1"></div>
+                     <div class="col-md-8 thumbnail" style="height: 300px">
+                            <img class="img-responsive" src="{{url_for('static',filename='img/cluster4/2.jpg') }}" id="showwine" style="height: 300px">
+                     </div>
+                         <div class="col-md-1"></div>
+                        <input type="button" value=">" onclick="showimage(1)" class="btn btn-dark btn-outline-dark col-md-1">
+                     </div>
+                 </div>
+            {% endif %}
         </div>
     </div>
-
-    <div class="col-md-8"></div>
 </div>
+
+ <div class="modal fade" id="recommend" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="text-primary">추천 입력</h3>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                <form class="col-md-12" action="/user/detail" method="post">
+                    <div class="form-group">
+                        <div class="row text-center">
+                            <label class="control-label col-md-12 text-center">*산도*</label>
+                        </div>
+                        <div class="row text-center">
+                            <p class="col-md-12">산도가 높을수록 시큼한 맛이 강해집니다.</p>
+                        </div>
+                        <div class="row text-center">
+                            <h5 class="col-md-2 text-primary">0</h5>
+                            <input type="range" name="acid" class="form-control-range col-md-8" min="0" max="5" step="1">
+                            <h5 class="col-md-2 text-primary">5</h5>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row text-center">
+                            <label class="control-label col-md-12 text-center">*알코올*</label>
+                        </div>
+                        <div class="row text-center">
+                            <p class="col-md-12">술은 역시 취해야죠!</p>
+                        </div>
+                        <div class="row text-center">
+                            <h5 class="col-md-2 text-primary">0</h5>
+                            <input type="range" name="alcohol" class="form-control-range col-md-8" min="0" max="5" step="1">
+                            <h5 class="col-md-2 text-primary">5</h5>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row text-center">
+                            <label class="control-label col-md-12 text-center">*바디*</label>
+                        </div>
+                        <div class="row text-center">
+                            <p class="col-md-12">바디가 높을수록 와인 맛의 무게감이 달라집니다.</p>
+                        </div>
+                        <div class="row text-center">
+                            <h5 class="col-md-2 text-primary">0</h5>
+                            <input type="range" name="density" class="form-control-range col-md-8" min="0" max="5" step="1">
+                            <h5 class="col-md-2 text-primary">5</h5>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row text-center">
+                            <label class="control-label col-md-12 text-center">*당도*</label>
+                        </div>
+                        <div class="row text-center">
+                            <p class="col-md-12">당도가 높을수록 맛이 달겠죠?</p>
+                        </div>
+                        <div class="row text-center">
+                            <h5 class="col-md-2 text-primary">0</h5>
+                            <input type="range" name="residual_sugar" class="form-control-range col-md-8" min="0" max="5" step="1">
+                            <h5 class="col-md-2 text-primary">5</h5>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row text-center">
+                            <label class="control-label col-md-12 text-center">*이산화황*</label>
+                        </div>
+                        <div class="row text-center">
+                            <p class="col-md-12">이산화황이 없으면 미생물 감염의 위험이 높아진대요!</p>
+                        </div>
+                        <div class="row text-center">
+                            <h5 class="col-md-2 text-primary">0</h5>
+                            <input type="range" name="total_sulfur_dioxide" class="form-control-range col-md-8" min="0" max="5" step="1">
+                            <h5 class="col-md-2 text-primary">5</h5>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9 text-center">
+                            <input type="submit" title="추천" alt="추천" value="추천" class="btn btn-info">
+                        </div>
+                    </div>
+                </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+    var marksCanvas = document.getElementById("marksChart");
+    var arr_cluster1=["/static/img/cluster1/1.jpg","/static/img/cluster1/2.jpg","/static/img/cluster1/3.jpg","/static/img/cluster1/4.jpg","/static/img/cluster1/5.jpg"];
+    var arr_cluster2=["/static/img/cluster2/1.jpg","/static/img/cluster2/2.jpg","/static/img/cluster2/3.jpg","/static/img/cluster2/4.jpg","/static/img/cluster2/5.jpg"];
+    var arr_cluster3=["/static/img/cluster3/1.jpg","/static/img/cluster3/2.jpg","/static/img/cluster3/3.jpg","/static/img/cluster3/4.jpg","/static/img/cluster3/5.jpg"];
+    var arr_cluster4=["/static/img/cluster4/1.jpg","/static/img/cluster4/2.jpg","/static/img/cluster4/3.jpg","/static/img/cluster4/4.jpg","/static/img/cluster4/5.jpg"];
+    var arr_cluster5=["/static/img/cluster5/1.jpg","/static/img/cluster5/2.jpg","/static/img/cluster5/3.jpg","/static/img/cluster5/4.jpg","/static/img/cluster5/5.jpg"];
+    var marksData = {
+        labels: {{ labels | tojson }},
+        datasets: {{ datasets | tojson }}
+    };
+    var radarChart = new Chart(marksCanvas, {
+        type: 'radar',
+        data: marksData
+    });
+    var num;
+    var cnt=0;
+    var dom1=document.getElementById("showwine");
+    var cluster1 = document.getElementById("cluster1").textContent;
+    if(cluster1 === "WhiteRose") dom1.src=arr_cluster1[cnt];
+    if(cluster1 === "LoveAlcohol") dom1.src=arr_cluster2[cnt];
+    if(cluster1 === "Sweetie") dom1.src=arr_cluster3[cnt];
+    if(cluster1 === "Neutral") dom1.src=arr_cluster4[cnt];
+    if(cluster1 === "BitterBetter") dom1.src=arr_cluster5[cnt];
+
+    function showimage(num)
+    {
+        if (num==0) cnt--;
+        else if(num==1) cnt++;
+        if (cnt<0) cnt+=5;
+        else if (cnt>4) cnt-=5;
+
+        if(cluster1 === "WhiteRose") dom1.src=arr_cluster1[cnt];
+
+        if(cluster1 === "LoveAlcohol") dom1.src=arr_cluster2[cnt];
+
+        if(cluster1 === "Sweetie") dom1.src=arr_cluster3[cnt];
+
+        if(cluster1 === "Neutral") dom1.src=arr_cluster4[cnt];
+
+        if(cluster1 === "BitterBetter") dom1.src=arr_cluster5[cnt];
+    }
+</script>
+
 {% include "footer.html" %}

@@ -47,7 +47,11 @@
            <td>{{i[9]}}</td>
            <td>{{i[10]}}</td>
             {% if session['logFlag'] == True %}
-                <td><a class="btn btn-outline-primary" href="#">등록</a></td>
+                <form action="/wine/likewine" method="post">
+                    <input type="hidden" name="w_id" value="{{i[0]}}">
+                    <input type="hidden" name="c_id" value="{{userId}}">
+                <td><input type="submit" value="등록" class="btn btn-outline-primary"></td>
+                </form>
             {% endif %}
         </tr>
         {% endfor %}

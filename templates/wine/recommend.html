@@ -1,0 +1,60 @@
+{% include "header.html" %}
+<h1>recommend</h1>
+    <div class="container1">
+        <h2>Chart.js — Radar Chart</h2>
+        <canvas id="marksChart" width="600" height="400"></canvas>
+    </div>
+    <script>
+    var marksCanvas = document.getElementById("marksChart");
+    var marksData = {
+        labels: {{ labels | tojson }},
+        datasets: {{ datasets | tojson }}
+    };
+    var radarChart = new Chart(marksCanvas, {
+        type: 'radar',
+        data: marksData
+    });
+    </script>
+
+<!--Box graph-->
+    <!-- Plotly chart will be drawn inside this DIV -->
+    <div id="myDiv"></div>
+    <script>
+        var y0=[],y1=[],y2=[], y3=[], y4=[]
+        for ( i = 0; i < 50; i ++)
+        {
+            y0[i] = Math.random();
+            y1[i] = Math.random();
+            y2[i] = Math.random();
+            y3[i] = Math.random();
+            y4[i] = Math.random();
+        }
+    var trace1 = {
+    y: y0,
+    type: 'box'
+    };
+
+    var trace2 = {
+    y: y1,
+    type: 'box'
+    };
+
+    var trace3 = {
+    y: y2,
+    type: 'box'
+    };
+
+    var trace4 = {
+    y: y3,
+    type: 'box'
+    };
+
+    var trace5 = {
+    y: y4,
+    type: 'box'
+    };
+    var data = [trace1, trace2, trace3, trace4, trace5];
+
+    Plotly.newPlot('myDiv', data);
+    </script>
+{% include "footer.html" %}

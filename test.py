@@ -15,6 +15,15 @@ def search():
     conn.close()
     return re
 
-re = search()
-for i in re:
-    print(i)
+
+def createTable():
+    conn = sqlite3.connect('wine.db')
+    cursor = conn.cursor()
+    cursor.execute('''create table likewine (l_id integer primary key AUTOINCREMENT,
+    w_id integer not null,
+    c_id varchar(30) not null,
+    FOREIGN KEY(w_id) REFERENCES wine(w_id), 
+    FOREIGN KEY(c_id) references customer(c_id))''')
+    conn.close()
+
+createTable()

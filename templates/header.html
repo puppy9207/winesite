@@ -26,9 +26,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="signin.js"></script>
-    <script type="text/javascript" src="login.js"></script>
-
     <script src="{{url_for('static',filename='vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{url_for('static',filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   </head>
@@ -41,7 +38,7 @@
       <div class="navbar-collapse collapse show" id="navbarsExampleDefault" style="">
         <ul class="navbar-nav mr-auto navbar-right">
           <li class="nav-item active">
-            <a class="nav-link btn" href="#">About Wine<span class="sr-only">(current)</span></a>
+            <a class="nav-link btn" href="/wine/aboutWine">About Wine<span class="sr-only">(current)</span></a>
           </li>
                 {% if session['logFlag'] == False %}
                     <li class="nav-item">
@@ -52,7 +49,14 @@
                     </li>
                 {% elif session['logFlag'] == True  %}
                     <li class="nav-item">
-                        <a class="btn btn-outline-light" href="/user/detail/{{session['userId']}}">{{session['userId'] }}</a>
+                        <form class="nav-link btn" action="/user/detail" method="post">
+                            <input type="hidden" name="acid" value="0">
+                            <input type="hidden" name="alcohol" value="0">
+                            <input type="hidden" name="density" value="0">
+                            <input type="hidden" name="residual_sugar" value="0">
+                            <input type="hidden" name="total_sulfur_dioxide" value="0">
+                            <input type="submit" class="btn btn-outline-light text-light" value="마이페이지">
+                        </form>
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-outline-light text-light" href="/user/logout">로그아웃</a>
@@ -192,7 +196,7 @@
                         <div class="form-group">
                         <div class="col-md-3"></div>
                         <div class="col-md-9">
-                          <input type="submit" title="로그인" alt="로그인" value="로그인" class="btn btn-info" onclick="nclks('log.login',this,event)"> <input type="reset" name="초기화" value="초기화" class="btn btn-default">
+                          <input type="submit" title="로그인" alt="로그인" value="로그인" class="btn btn-info"> <input type="reset" name="초기화" value="초기화" class="btn btn-default">
                       </div>
                         </div>
                         </form>

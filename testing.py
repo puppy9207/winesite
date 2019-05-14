@@ -1,5 +1,7 @@
 from selenium import webdriver
+from selenium.common import exceptions
 from bs4 import BeautifulSoup
+import time
 import threading
 
 def dictDt(dt):
@@ -57,6 +59,7 @@ def sepPrice(price):
     price = price.replace(",","")
     price = int(price.replace("원",""))
     return price
+
 def writingCsv(wine):
     with open('./wine.csv', 'a', encoding='utf-8-sig') as f:
         csv_data = wine
@@ -69,41 +72,81 @@ def writingCsv(wine):
 driver = webdriver.Chrome(executable_path='driver/chromedriver.exe')
 driver.implicitly_wait(3)
 driver.get('https://www.wine21.com/13_search/wine_list.html')
-cnt=1
+cnt=1097
+
+if cnt>10:
+    driver.execute_script("document.getElementsByClassName('btnPageMove')[9].setAttribute('alt','"+str(cnt-1)+"')")
+    button = driver.find_element_by_link_text('다음')
+    button.click()
+
 while(True):
     if cnt>1630:
         break
+    if cnt%50 == 0:
+        driver.implicitly_wait(5)
+
 
     for a in range(1,11):
         if cnt!= 1:
-            if cnt%10 == 1:
+            if cnt % 10 == 1:
                 button = driver.find_element_by_link_text('다음')
                 button.click()
                 driver.implicitly_wait(2)
         if cnt!= 1:
             if cnt%10!=1:
-                try:
-                    button = driver.find_element_by_link_text(str(cnt))
-                    button.click()
-                except Exception:
-                    for at in range(cnt // 10):
-                        awa = driver.find_element_by_link_text('다음')
-                        awa.click()
+                button = driver.find_element_by_link_text(str(cnt))
+                button.click()
         #한바퀴
         wines = []
         for i in range(1,11):
             wine = []
-            name = driver.find_element_by_css_selector('li:nth-child(' + str(i) + ') > div.column_detail1 >div.cnt > div.tit > h4 > a')
-            name.click()
+            try:
+                name = driver.find_element_by_css_selector(
+                    'li:nth-child(' + str(i) + ') > div.column_detail1 >div.cnt > div.tit > h4 > a')
+                name.click()
 
+                # 변수 초기화
+                wineKo = None
+                wineEn = None
+                winery = None
+                wine_area = None
+                kind = None
+                value = None
+                alcohol = None
+                temp = None
+                price = None
+                sugar = None
+                acid = None
+                body = None
+                tarnin = None
+                url = None
 
-            html = driver.page_source
-            soup = BeautifulSoup(html,'html.parser')
+                html = driver.page_source
+                soup = BeautifulSoup(html, 'html.parser')
+            except exceptions.NoSuchWindowException:
+                time.sleep(5)
+                driver = webdriver.Chrome(executable_path='driver/chromedriver.exe')
+                driver.get('https://www.wine21.com/13_search/wine_list.html')
+                driver.execute_script(
+                    "document.getElementsByClassName('btnPageMove')[9].setAttribute('alt','" + str(cnt - 1) + "')")
+                button = driver.find_element_by_link_text('다음')
+                button.click()
+            except exceptions.TimeoutException:
+                time.sleep(5)
+                driver = webdriver.Chrome(executable_path='driver/chromedriver.exe')
+                driver.get('https://www.wine21.com/13_search/wine_list.html')
+                driver.execute_script(
+                    "document.getElementsByClassName('btnPageMove')[9].setAttribute('alt','" + str(cnt - 1) + "')")
+                button = driver.find_element_by_link_text('다음')
+                button.click()
+
             #한글이름
             wineKo = soup.select_one('div.column_detail2 > div.cnt > h4').string.replace(","," ")
+            wineKo = wineKo.replace("  "," ")
             wine.append(wineKo)
             #영어이름
             wineEn = soup.select_one('div.column_detail2 > div.cnt > div.name_en').string.replace(","," ")
+            wineEn = wineEn.replace("  "," ")
             wine.append(wineEn)
 
             dt = soup.select('div.wine_info > dl > dt')
@@ -117,15 +160,24 @@ while(True):
                 winery = " ".join(winery.split())
             except Exception:
                 winery = None
+            finally:
+                wine.append(winery)
+
+
             try:
                 wine_area = driver.find_element_by_css_selector('dd.wine_area > a').text.strip()
             except Exception:
                 wine_area = None
+            finally:
+                wine.append(wine_area)
 
             try:
                 kind = driver.find_element_by_css_selector('dd.variety').text.strip()
+                kind = kind.replace(",","")
             except Exception:
                 kind = None
+            finally:
+                wine.append(kind)
 
             try:
                 value = dd[dic['종류']].string
@@ -167,10 +219,14 @@ while(True):
             for i in factor:
                 wine.append(i)
 
+            url = driver.current_url
+            wine.append(url)
+
             wines.append(wine)
             driver.execute_script("window.history.go(-1)")
-        print(wines)
 
+        print(wines)
         t1 = threading.Thread(target=writingCsv(wines), args=wines, )
         t1.start()
         cnt+=1
+        print(cnt)

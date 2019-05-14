@@ -9,8 +9,8 @@ def createTable():
         cursor.execute('''
                 CREATE TABLE if not exists wine (
                     w_id integer not null primary key AUTOINCREMENT,
-                    w_ko varchar(400) unique ,
-                    w_en varchar(400) unique ,
+                    w_ko varchar(200) unique ,
+                    w_en varchar(200) unique ,
                     w_val varchar(50) ,
                     w_alcohol float(10) ,
                     w_temp varchar(20),
@@ -19,6 +19,7 @@ def createTable():
                     w_acid integer (2),
                     w_body integer (2),
                     w_tarnin integer (2)
+                    w_url varchar(100) 
                 )
                 ''')
     finally:
